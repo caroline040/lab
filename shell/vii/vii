@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+then
+	vi
+fi
+
+if [ $# -eq 1 ]
+then
+	suffix=`echo $1 | sed "s/\(.*\)\(\..\)$/\2/"`
+	if [  $suffix != ".c" ] || [ -e $1 ]
+	then
+		vi $1
+		exit
+	fi
+fi
+
+
+sample="/bin/sample.c"
+
+if [ ! -e $sample ]
+then
+	echo "$sample is NOT exist"
+	exit
+else
+	cp $sample $1
+	vi $1
+fi
+
