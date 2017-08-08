@@ -13,11 +13,11 @@ LDFLAGS += -L lib/
 LDFLAGS += -lcjson
 
 
-debug:$(SRC)
-	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DDEBUG
-
 getweatherinfo:$(SRC)
 	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DNDEBUG
+
+debug:$(SRC)
+	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DDEBUG
 
 clean:
 	$(RM) getweatherinfo debug

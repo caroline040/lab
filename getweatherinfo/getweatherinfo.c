@@ -30,11 +30,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-const char month_tab[48] = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
-const char day_tab[] = "Sun,Mon,Tue,Wed,Thu,Fri,Sat";
+#include "cJSON.h"
 
-
-struct in_addr **remote_info(struct hostent *he)
+void remote_info(struct hostent *he)
 {
 	assert(he);
 
@@ -50,14 +48,13 @@ struct in_addr **remote_info(struct hostent *he)
 
 	for(i=0; he->h_addr_list[i]!=NULL; i++)
 	{
-		printf("IP地址[%d]：%s\n", i+1, inet_ntoa(*((struct in_addr **)he->h_addr_list)[i]));
+		printf("IP地址[%d]：%s\n", i+1,
+			inet_ntoa(*((struct in_addr **)he->h_addr_list)[i]));
 	}
-
-	return (struct in_addr **)he->h_addr_list;
 }
 
 
-void create_msg(char*buf, int size, char *phone_code)
+void http_request(char*buf, int size, char *phone_code)
 {
 	assert(buf);
 	assert(phone_code);
@@ -77,7 +74,8 @@ void create_msg(char*buf, int size, char *phone_code)
 		"HTTP/1.1\r\n"
 		"Content-Length:0\r\n"
 		"User-Agent:Mozilla/5.0(Macintoh;Intel Mac OS X 1_12_0) "
-		"AppleWebKit/537.36(KHTML,like Gecko) Chrome/56.0.2924.87 Safari/537.36\r\n"
+		"AppleWebKit/537.36(KHTML,like Gecko) "
+		"Chrome/56.0.2924.87 Safari/537.36\r\n"
 		"Date:%s\r\n"
 		"Server: cagaccesstengine010151203185.cm9\r\n"
 		"Content-Type:application/json; charset=utf-8\r\n"
@@ -90,7 +88,27 @@ void create_msg(char*buf, int size, char *phone_code)
 
 void show_weather_info(char *json)
 {
-	printf("%s", json);	
+	cJSON *root     = cJSON_Parse(json);
+
+	cJSON *body     = cJSON_GetObjectItem(root, "showapi_res_body");
+	cJSON *now      = cJSON_GetObjectItem(body, "now");
+	cJSON *cityInfo = cJSON_GetObjectItem(body, "cityInfo");
+	cJSON *today    = cJSON_GetObjectItem(body, "f1");
+	cJSON *tomorrow = cJSON_GetObjectItem(body, "f2");
+
+
+	char *country = cJSON_GetObjectItem(cityInfo, "c9")->valuestring;
+	char *province= cJSON_GetObjectItem(cityInfo, "c7")->valuestring;
+	char *city    = cJSON_GetObjectItem(cityInfo, "c5")->valuestring;
+
+	printf("城市：%s·%s·%s\n\n", country, province, city);
+
+	printf("现在天气：%s\n",cJSON_GetObjectItem(now, "weather")->valuestring);
+	printf("现在气温：%s°C\n\n",  cJSON_GetObjectItem(now, "temperature")->valuestring);
+
+	printf("明天天气：%s\n",        cJSON_GetObjectItem(tomorrow, "day_weather")->valuestring);
+	printf("日间气温：%s°C\n",   cJSON_GetObjectItem(tomorrow, "day_air_temperature")->valuestring);
+	printf("夜间气温：%s°C\n\n", cJSON_GetObjectItem(tomorrow, "night_air_temperature")->valuestring);
 }
 
 
@@ -105,9 +123,11 @@ int main(int argc, char **argv)
 	char *host = "ali-weather.showapi.com";
 	struct hostent *he = gethostbyname(host);
 
-	// show remote info and return the address list
-	struct in_addr **addr_list = remote_info(he);
-	
+#ifdef DEBUG
+	remote_info(he);
+#endif
+
+	struct in_addr **addr_list = (struct in_addr **)(he->h_addr_list);
 
 	int fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -126,12 +146,12 @@ int main(int argc, char **argv)
 	}
 
 	char *sndbuf = calloc(1, 1000);
-	create_msg(sndbuf, 1000, phone_code);   
+	http_request(sndbuf, 1000, phone_code);   
 
 #ifdef DEBUG
 	printf("Request:\n");
 	printf("+++++++++++++++++++++++++++++++\n");
-	printf("%s", buf);
+	printf("%s", sndbuf);
 	printf("+++++++++++++++++++++++++++++++\n\n");
 #endif
 
@@ -141,7 +161,11 @@ int main(int argc, char **argv)
 		perror("send() failed");
 		exit(0);
 	}
+
+#ifdef DEBUG
 	printf("[%5d] bytes have been sent.\n", n);
+#endif
+
 	free(sndbuf);
 
 	char *recvbuf = calloc(1, 4096);
@@ -170,12 +194,18 @@ int main(int argc, char **argv)
 
 		if(strstr(recvbuf, "}}") || strstr(recvbuf, "400 Bad Request"))
 			break;
+
+		if(strstr(recvbuf, "Quota Exhausted"))
+		{
+			printf("API查询次数已超，请续费。\n");
+			exit(0);
+		}
 	}
 
 #ifdef DEBUG
 	printf("*******************************\n");
-#endif
 	printf("[%5d] bytes have been received.\n\n", m);
+#endif
 
 	show_weather_info(strstr(recvbuf, "{"));
 	free(recvbuf);
