@@ -41,6 +41,13 @@
 *.su
 *.idb
 *.pdb
+debug
+getweatherinfo
+album
+piano
+2048
+voicectl
+
 
 # Kernel Module Compile Results
 *.mod*
@@ -50,3 +57,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+# others
+.*.sw?
