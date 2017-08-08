@@ -58,32 +58,14 @@ void http_request(char*buf, int size, char *phone_code)
 {
 	assert(buf);
 	assert(phone_code);
-	bzero(buf, size);
 
-	int current_len = strlen(buf);
-	time_t t = time(NULL);
-	snprintf(buf + current_len, size - current_len,
-		"GET /phone-post-code-weeather?"
-		"need3HourForcast=0&"
-		"needAlarm=0&"
-		"needHourData=0&"
-		"needIndex=0&"
-		"needMoreDay=0&"
-		"phone_code=%s&"
-		"post_code=0 "
-		"HTTP/1.1\r\n"
-		"Content-Length:0\r\n"
-		"User-Agent:Mozilla/5.0(Macintoh;Intel Mac OS X 1_12_0) "
-		"AppleWebKit/537.36(KHTML,like Gecko) "
-		"Chrome/56.0.2924.87 Safari/537.36\r\n"
-		"Date:%s\r\n"
-		"Server: cagaccesstengine010151203185.cm9\r\n"
-		"Content-Type:application/json; charset=utf-8\r\n"
-		"Host:ali-weather.showapi.com\r\n"
-		"Accept:application/json\r\n"
-		"Authorization:APPCODE d487d937315848af80710a06f4592fee\r\n\r\n",
-		phone_code,
-		strtok(ctime(&t), "\n"));
+	bzero(buf, size);
+	snprintf(buf, size, "GET /phone-post-code-weeather?"
+			    "phone_code=%s "
+			    "HTTP/1.1\r\n"
+			    "Host:ali-weather.showapi.com\r\n"
+			    "Authorization:APPCODE d487d937315848af80710a06f4592fee\r\n\r\n",
+			    phone_code);
 }
 
 void show_weather_info(char *json)
@@ -103,10 +85,10 @@ void show_weather_info(char *json)
 
 	printf("城市：%s·%s·%s\n\n", country, province, city);
 
-	printf("现在天气：%s\n",cJSON_GetObjectItem(now, "weather")->valuestring);
-	printf("现在气温：%s°C\n\n",  cJSON_GetObjectItem(now, "temperature")->valuestring);
+	printf("现在天气：%s\n",    cJSON_GetObjectItem(now, "weather")->valuestring);
+	printf("现在气温：%s°C\n\n",cJSON_GetObjectItem(now, "temperature")->valuestring);
 
-	printf("明天天气：%s\n",        cJSON_GetObjectItem(tomorrow, "day_weather")->valuestring);
+	printf("明天天气：%s\n",     cJSON_GetObjectItem(tomorrow, "day_weather")->valuestring);
 	printf("日间气温：%s°C\n",   cJSON_GetObjectItem(tomorrow, "day_air_temperature")->valuestring);
 	printf("夜间气温：%s°C\n\n", cJSON_GetObjectItem(tomorrow, "night_air_temperature")->valuestring);
 }
@@ -163,7 +145,7 @@ int main(int argc, char **argv)
 	}
 
 #ifdef DEBUG
-	printf("[%5d] bytes have been sent.\n", n);
+	printf("[%d] bytes have been sent.\n", n);
 #endif
 
 	free(sndbuf);
@@ -204,7 +186,7 @@ int main(int argc, char **argv)
 
 #ifdef DEBUG
 	printf("*******************************\n");
-	printf("[%5d] bytes have been received.\n\n", m);
+	printf("[%d] bytes have been received.\n\n", m);
 #endif
 
 	show_weather_info(strstr(recvbuf, "{"));
