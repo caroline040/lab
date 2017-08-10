@@ -72,14 +72,19 @@ void http_request(char*buf, int size, char *phone_code)
 void show_weather_info(char *json)
 {
 	cJSON *root     = cJSON_Parse(json);
-
 	cJSON *body     = cJSON_GetObjectItem(root, "showapi_res_body");
+
+	if(cJSON_GetObjectItem(body, "ret_code")->valueint == -1)
+	{
+		printf("%s\n",cJSON_GetObjectItem(body, "remark")->valuestring);	
+		return;
+	}
+
 	cJSON *now      = cJSON_GetObjectItem(body, "now");
 	cJSON *cityInfo = cJSON_GetObjectItem(body, "cityInfo");
 	cJSON *today    = cJSON_GetObjectItem(body, "f1");
 	cJSON *tomorrow = cJSON_GetObjectItem(body, "f2");
 	cJSON *day_3rd  = cJSON_GetObjectItem(body, "f3");
-
 
 	char *country = cJSON_GetObjectItem(cityInfo, "c9")->valuestring;
 	char *province= cJSON_GetObjectItem(cityInfo, "c7")->valuestring;
@@ -105,9 +110,10 @@ int main(int argc, char **argv)
 {
 	printf("input phone code: \n");
 
-	char phone_code[5];
-	bzero(phone_code, 5);
-	scanf("%s", phone_code);
+	char *phone_code = calloc(1, 5);
+	fgets(phone_code, 5, stdin);
+
+	phone_code = strtok(phone_code, "\n");
 
 	char *host = "ali-weather.showapi.com";
 	struct hostent *he = gethostbyname(host);
@@ -136,6 +142,7 @@ int main(int argc, char **argv)
 
 	char *sndbuf = calloc(1, 1000);
 	http_request(sndbuf, 1000, phone_code);   
+	free(phone_code);
 
 #ifdef DEBUG
 	printf("Request:\n");
