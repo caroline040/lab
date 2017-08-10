@@ -13,14 +13,14 @@ LDFLAGS += -L lib/
 LDFLAGS += -lcjson
 
 
-getweatherinfo:$(SRC)
+weather:$(SRC)
 	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DNDEBUG
 
 debug:$(SRC)
 	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DDEBUG
 
 clean:
-	$(RM) getweatherinfo debug
+	$(RM) weather debug
 
 distclean:clean
 	$(RM) core .*.sw? *.html

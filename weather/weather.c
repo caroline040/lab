@@ -18,6 +18,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 #include <assert.h>
 #include <time.h>
 #include <string.h>
@@ -77,13 +78,15 @@ void show_weather_info(char *json)
 	cJSON *cityInfo = cJSON_GetObjectItem(body, "cityInfo");
 	cJSON *today    = cJSON_GetObjectItem(body, "f1");
 	cJSON *tomorrow = cJSON_GetObjectItem(body, "f2");
+	cJSON *day_3rd  = cJSON_GetObjectItem(body, "f3");
 
 
 	char *country = cJSON_GetObjectItem(cityInfo, "c9")->valuestring;
 	char *province= cJSON_GetObjectItem(cityInfo, "c7")->valuestring;
 	char *city    = cJSON_GetObjectItem(cityInfo, "c5")->valuestring;
 
-	printf("城市：%s·%s·%s\n\n", country, province, city);
+	bool zhixiashi = !strcmp(city, province);
+	printf("城市：%s·%s%s%s\n\n", country, province, zhixiashi ? "" : "·", zhixiashi ? "" : city);
 
 	printf("现在天气：%s\n",    cJSON_GetObjectItem(now, "weather")->valuestring);
 	printf("现在气温：%s°C\n\n",cJSON_GetObjectItem(now, "temperature")->valuestring);
@@ -91,6 +94,10 @@ void show_weather_info(char *json)
 	printf("明天天气：%s\n",     cJSON_GetObjectItem(tomorrow, "day_weather")->valuestring);
 	printf("日间气温：%s°C\n",   cJSON_GetObjectItem(tomorrow, "day_air_temperature")->valuestring);
 	printf("夜间气温：%s°C\n\n", cJSON_GetObjectItem(tomorrow, "night_air_temperature")->valuestring);
+
+	printf("后天天气：%s\n",     cJSON_GetObjectItem(day_3rd, "day_weather")->valuestring);
+	printf("日间气温：%s°C\n",   cJSON_GetObjectItem(day_3rd, "day_air_temperature")->valuestring);
+	printf("夜间气温：%s°C\n\n", cJSON_GetObjectItem(day_3rd, "night_air_temperature")->valuestring);
 }
 
 
