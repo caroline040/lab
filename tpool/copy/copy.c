@@ -84,10 +84,6 @@ void copydir(thread_pool *pool,
 	struct dirent *ep;
 	struct stat *file_info;
 
-	printf("abs_ori: %s\n", abs_ori);
-	printf("abs_src: %s\n", abs_src);
-	printf("abs_dst: %s\n", abs_dst);
-
 	while(1)
 	{
 		chdir(abs_src);
@@ -111,15 +107,13 @@ void copydir(thread_pool *pool,
 			mkdir(ep->d_name, 0777);
 			chdir(ep->d_name);
 
-			char *path = calloc(1, PATHSIZE);
+			char path[PATHSIZE] = {0};
 			getcwd(path, PATHSIZE);
 
 			chdir(abs_src);
 
 			/* copy sub-directory recursively */
 			copydir(pool, ep->d_name, path);
-
-			//free(path);
 		}
 		else if(S_ISREG(file_info->st_mode))
 		{
@@ -149,18 +143,53 @@ void copydir(thread_pool *pool,
 	
 			add_task(pool, mytask, (void *)fd);
 		}
+		else
+		{
+			printf("omiting %s\n", ep->d_name);
+			continue;
+		}
 	}
 
 	free(abs_ori);
 	free(abs_src);
 	free(abs_dst);
-	printf("[%d]\n", __LINE__);
 }
 
-int main(int argc, char **argv) // ./mycp ../../xxx /etc/yyy
+void usage(int argc, char **argv)
 {
 	if(argc != 3)
+	{
+		fprintf(stderr, "%s SOURCE DESTINATION\n", argv[0]);
 		exit(0);
+	}
+
+	if(access(argv[1], F_OK))
+	{
+		fprintf(stderr, "\"%s\" is NOT exist.\n", argv[1]);
+		exit(0);
+	}
+
+	if(!access(argv[2], F_OK))
+	{
+		fprintf(stderr, "\"%s\" is exist.\n", argv[2]);
+		fprintf(stderr, "do you want to OVER-WRITE it? [yes/no]");
+
+		char  choice[4];
+		fgets(choice, 4, stdin);
+
+		if(!strncmp(choice, "yes", 3) ||
+		   !strncmp(choice, "YES", 3) ||
+		   !strncmp(choice, "y", 1) ||
+		   !strncmp(choice, "Y", 1))
+			return;
+		else
+			exit(0);
+	}
+}
+
+int main(int argc, char **argv)
+{
+	usage(argc, argv);
 
 	// 1, initialize the pool
 	thread_pool *pool = malloc(sizeof(thread_pool));
@@ -172,7 +201,7 @@ int main(int argc, char **argv) // ./mycp ../../xxx /etc/yyy
 	// 2, throw tasks
 	if(S_ISREG(file_info->st_mode))
 	{
-		int fd[2];
+		int *fd = calloc(2, sizeof(int));
 		fd[0] = open(argv[1], O_RDONLY);
 		fd[1] = open(argv[2], O_CREAT|O_WRONLY|O_TRUNC, 0644);
 		add_task(pool, mytask, (void *)fd);

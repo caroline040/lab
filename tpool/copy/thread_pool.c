@@ -47,8 +47,11 @@ void *routine(void *arg)
 		p = pool->task_list->next;
 		pool->task_list->next = p->next;
 		pool->waiting_tasks--;
+
+#ifdef DEBUG
 		printf("[%s][%d]: waiting_task: %d\n", __FUNCTION__,
 			__LINE__, pool->waiting_tasks);
+#endif
 
 		//================================================//
 		pthread_mutex_unlock(&pool->lock);
