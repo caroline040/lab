@@ -2,7 +2,7 @@
 
 if [ $# -eq 0 ]
 then
-	echo "Usage: find_garbage [PATH]"
+	echo "Usage: find_garbage PATH"
 	exit
 fi
 
