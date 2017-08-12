@@ -6,4 +6,4 @@
 
 
  
-有技术问题的同学可以联系加入QQ群：![image](https://github.com/vincent040/lab/blob/master/res/QQ_qun.png?raw=true)
+有技术问题的同学可以联系加入QQ群：<a href="http://shang.qq.com/wpa/qunwpa?idkey=457dead858ccbda1b670f91229e334695619cb9f891b433301ac3dd780d1ecaa">![image](https://github.com/vincent040/lab/blob/master/res/QQ_qun.png?raw=true)
