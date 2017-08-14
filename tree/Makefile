@@ -1,5 +1,5 @@
 CFLAGS = -I./headers -g
-BIN = bst avl
+BIN = bst.out avl.out
 
 all:$(BIN)
 

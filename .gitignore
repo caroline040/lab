@@ -41,12 +41,6 @@
 *.su
 *.idb
 *.pdb
-debug
-getweatherinfo
-album
-piano
-2048
-voicectl
 
 
 # Kernel Module Compile Results

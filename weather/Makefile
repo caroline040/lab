@@ -13,14 +13,14 @@ LDFLAGS += -lcjson
 LDFLAGS += -Wl,-rpath=./cJSON
 
 
-weather:$(SRC)
+weather.out:$(SRC)
 	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DNDEBUG
 
-debug:$(SRC)
+debug.out:$(SRC)
 	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS) -DDEBUG
 
 clean:
-	$(RM) weather debug
+	$(RM) *.out
 
 distclean:clean
 	$(RM) core .*.sw? *.html
