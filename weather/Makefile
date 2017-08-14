@@ -6,11 +6,11 @@ SRC += $(wildcard *.c)
 #CROSS = arm-none-linux-gnueabi-
 CC = $(CROSS)gcc
 
-CPPFLAGS += -I inc/
-CPPFLAGS += -I inc/cjson/
+CPPFLAGS += -I cJSON/
 
-LDFLAGS += -L lib/
+LDFLAGS += -L cJSON/
 LDFLAGS += -lcjson
+LDFLAGS += -Wl,-rpath=./cJSON
 
 
 weather:$(SRC)
