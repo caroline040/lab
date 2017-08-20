@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS = -O0 -Wall -g -lpthread
 
-test.out:main.c thread_pool.c
+test.elf:main.c thread_pool.c
 	$(CC) $^ -o $@ $(CFLAGS)
 
 clean:
-	$(RM) .*.sw? test.out *.o
+	$(RM) .*.sw? test.elf *.o
 
 .PHONY:all clean

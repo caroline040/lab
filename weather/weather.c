@@ -2,7 +2,7 @@
 //
 //  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
 //
-//  File name: lab/getweatherinfo/getweatherinfo.c
+//  File name: lab/weather/weather.c
 //
 //  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
 //
@@ -69,7 +69,7 @@ void http_request(char*buf, int size, char *phone_code)
 			    phone_code);
 }
 
-void show_weather_info(char *json)
+void show_weather_info(char *json) // json: "{.....}"
 {
 	cJSON *root     = cJSON_Parse(json);
 	cJSON *body     = cJSON_GetObjectItem(root, "showapi_res_body");
@@ -117,6 +117,12 @@ int main(int argc, char **argv)
 
 	char *host = "ali-weather.showapi.com";
 	struct hostent *he = gethostbyname(host);
+	if(he == NULL)
+	{
+		errno = h_errno;
+		perror("gethostbyname() failed");
+		exit(0);
+	}
 
 #ifdef DEBUG
 	remote_info(he);

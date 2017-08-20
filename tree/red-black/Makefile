@@ -9,7 +9,7 @@ SRC += rb_insert.c
 CPPFLAGS += -I include/
 CPPFLAGS += -DRB
 
-rb.out:$(SRC) rb_test.c
+rb.elf:$(SRC) rb_test.c
 	$(CC) $^ -o $@ $(CPPFLAGS)
 
 clean:
