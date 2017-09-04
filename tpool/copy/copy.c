@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////////////
+//
+//  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
+//
+//  File name: lab/tpool/copy/copy.c
+//
+//  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
+//
+//  Date: 2016-3
+//  
+//  Description: 使用线程池递归拷贝目录
+//
+//  GitHub: github.com/vincent040   Bug Report: 2437231462@qq.com
+//
+////////////////////////////////////////////////////////////////////
+
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>

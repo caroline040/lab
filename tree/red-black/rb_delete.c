@@ -2,7 +2,7 @@
 //
 //  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
 //
-//  File name: GPLE/ch03/3.3/rb_delete.c
+//  File name: lab/tree/red-block/rb_delete.c
 //
 //  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
 //

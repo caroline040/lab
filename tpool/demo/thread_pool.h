@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////////////
+//
+//  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
+//
+//  File name: lab/tpool/demo/thread_pool.h
+//
+//  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
+//
+//  Date: 2016-3
+//  
+//  Description: 线程池模板头文件
+//
+//  GitHub: github.com/vincent040   Bug Report: 2437231462@qq.com
+//
+////////////////////////////////////////////////////////////////////
+
 #ifndef _THREAD_POOL_H_
 #define _THREAD_POOL_H_
 

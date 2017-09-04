@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////////////
+//
+//  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
+//
+//  File name: lab/tpool/demo/main.c
+//
+//  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
+//
+//  Date: 2016-3
+//  
+//  Description: 线程池的测试代码
+//
+//  GitHub: github.com/vincent040   Bug Report: 2437231462@qq.com
+//
+////////////////////////////////////////////////////////////////////
+
 #include "thread_pool.h"
 
 void *mytask(void *arg)

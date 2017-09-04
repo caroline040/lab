@@ -2,7 +2,7 @@
 //
 //  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
 //
-//  File name: GPLE/ch03/3.3/head4rb.h
+//  File name: lab/tree/red-block/include/head4rb.h
 //
 //  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
 //
