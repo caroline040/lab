@@ -1,18 +1,17 @@
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 //
-//  Copyright(C), 2013-2016, GEC Tech. Co., Ltd.
+//  Copyright(C), 2013-2017, GEC Tech. Co., Ltd.
 //
-//  File name: lab/tree/red-block/include/head4rb.h
+//  文件: lab/tree/red-block/include/head4rb.h
+//  日期: 2017-9
+//  描述: 红黑树的各种算法头文件
 //
-//  Author: Vincent Lin (林世霖)  微信公众号：秘籍酷
+//  作者: Vincent Lin (林世霖)   微信公众号：秘籍酷
+//  技术微店: http://weidian.com/?userid=260920190
+//  技术交流: 260492823（QQ群）
 //
-//  Date: 2016-3
-//  
-//  Description: 红黑树的各种算法头文件
-//
-//  GitHub: github.com/vincent040   Bug Report: 2437231462@qq.com
-//
-//////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+
 
 #ifndef _HEAD4RB_H_
 #define _HEAD4RB_H_
