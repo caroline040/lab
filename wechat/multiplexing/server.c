@@ -26,8 +26,6 @@ linklist init_list(void)
 
 linklist newnode(int fd, struct sockaddr_in *addr)
 {
-	assert(addr);
-
 	linklist new = calloc(1, sizeof(listnode));
 	if(new == NULL)
 	{
@@ -75,69 +73,76 @@ int main(int argc, char **argv) // ./server 50001
 	// 3. set fd to listenning state
 	Listen(fd, 3);
 
-	// 4. set the file status flags specified with NON-block
-	long status = fcntl(fd, F_GETFL);
-	status |= O_NONBLOCK;
-	fcntl(fd, F_SETFL, status);
-
-	// 5. create a linklist to store clients
+	// 4. create a linklist to store clients
 	linklist head = init_list();
 
-	// 6. waiting for connection and datas
-	len = sizeof(cliaddr);
-	char *msg = malloc(MAXMSGLEN);
+	fd_set rset;
+	int maxfd = fd;
+	struct list_head *pos, *n;
+
+	// 5. waiting for connection and datas
 	while(1)
 	{
-		// 6.1 waiting for connection
-		bzero(&cliaddr, len);
-		int connfd = Accept(fd, (struct sockaddr *)&cliaddr, &len);
+		// 5.1 add all of fds into rset
+		FD_ZERO(&rset);
+		FD_SET(fd, &rset);
 
-		// 6.2 no connection is available
-		if(connfd > 0)
+		list_for_each(pos, &head->list)
 		{
-			// 6.2.1 welcome
-			printf("new connection: [%s:%hu]\n",
+			linklist p = list_entry(pos, listnode, list);
+
+			FD_SET(p->fd, &rset);
+			maxfd = maxfd > p->fd ? maxfd : p->fd;
+		}
+
+		// 5.2 multiplexing waiting
+		Select(maxfd+1, &rset, NULL, NULL, NULL);
+
+		// 5.3 testing whether or not new connection has occured
+		if(FD_ISSET(fd, &rset))
+		{
+			bzero(&cliaddr, len);
+			len = sizeof(cliaddr);
+			int connfd = Accept(fd, (struct sockaddr *)&cliaddr, &len);
+
+			// welcome
+			printf("welcome new connection: [%s:%hu]\n",
 				inet_ntoa(cliaddr.sin_addr),
 				ntohs(cliaddr.sin_port));
 
-			// 6.2.2 set new connection to NON-block
-			long status = fcntl(connfd, F_GETFL);
-			status |= O_NONBLOCK;
-			fcntl(connfd, F_SETFL, status);
-
-			// 6.2.3 add the new client to linklist
+			// add the new client to linklist
 			linklist new = newnode(connfd, &cliaddr);
 			list_add_tail(&new->list, &head->list);
 		}
 
-		// 6.3 iterate over the clients-list
-		struct list_head *pos, *n;
-		linklist p;
+		// 5.4 testing whether or not data from client has received
 		list_for_each_safe(pos, n, &head->list)
 		{
-			p = list_entry(pos, listnode, list);
+			linklist p = list_entry(pos, listnode, list);
 
-			bzero(msg, MAXMSGLEN);
+			if(!FD_ISSET(p->fd, &rset))
+				continue;
 
+			char *msg = calloc(1, MAXMSGLEN);
 			int nread = Read(p->fd, msg, MAXMSGLEN);
+
 			if(nread > 0)
 			{
 				printf("from [%s:%hu]: %s",
-					p->ip,
-					p->port,
-					msg);
+					p->ip, p->port, msg);
 			}
+
 			else if(nread == 0)
 			{
 				printf("[%s:%hu] has quitted.\n",
-					p->ip,
-					p->port);
+					p->ip, p->port);
 
 				list_del(pos);
 				free(p);
 			}
+			free(msg);
 		}
-	} // while
+	} //while(1)
 
 	return 0;
 }

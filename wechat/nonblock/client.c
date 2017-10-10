@@ -9,25 +9,6 @@ void usage(int argc, char **argv)
 	}
 }
 
-void *routine(void *arg)
-{
-	pthread_detach(pthread_self());
-
-	int fd = *((int *)arg);
-
-	char *msg = malloc(MAXMSGLEN);
-	while(1)
-	{
-		bzero(msg, MAXMSGLEN);
-		if(Read(fd, msg, MAXMSGLEN) == 0)
-			break;
-
-		printf("from server: %s", msg);
-	}
-
-	pthread_exit(NULL);
-}
-
 int main(int argc, char **argv) // ./client 192.168.1.100 50001
 {
 	usage(argc, argv);

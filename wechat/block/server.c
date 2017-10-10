@@ -70,7 +70,7 @@ void *routine(void *arg)
 			msg);
 	}
 
-	printf("[%s:%hu] quited.\n",
+	printf("[%s:%hu] has quited.\n",
 			client->ip,
 			client->port);
 }

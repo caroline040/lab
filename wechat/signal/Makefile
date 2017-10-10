@@ -1,5 +1,5 @@
 CPPFLAGS += -I.
-LDFLAGS  +=
+LDFLAGS  += 
 
 all:server.elf client.elf
 
