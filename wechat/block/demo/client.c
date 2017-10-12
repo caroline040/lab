@@ -20,15 +20,12 @@ void *routine(void *arg)
 	{
 		bzero(msg, MAXMSGLEN);
 		if(Read(fd, msg, MAXMSGLEN) == 0)
-		{
-			printf("server has been shutdown, bye-bye!\n");
 			break;
-		}
 
 		printf("from server: %s", msg);
 	}
 
-	exit(0);
+	pthread_exit(NULL);
 }
 
 int main(int argc, char **argv) // ./client 192.168.1.100 50001
@@ -48,12 +45,8 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 	srvaddr.sin_addr.s_addr = inet_addr(argv[1]);
 	srvaddr.sin_port = htons(atoi(argv[2]));
 
-	// 3. connect to the server and get an ID
+	// 3. connect to the server
 	Connect(fd, (struct sockaddr *)&srvaddr, len);
-	char ID[6] = {0};
-	Read(fd, ID, 6);
-	printf("my ID: %s\n", ID);
-
 
 	// 4. create a thread to receive msg from server
 	pthread_t tid;
@@ -68,9 +61,6 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 		// 5.1 waiting for inputing
 		bzero(msg, MAXMSGLEN);
 		if(fgets(msg, MAXMSGLEN, stdin) == NULL)
-			break;
-
-		if(!strcmp(msg, "quit\n") || !strcmp(msg, "exit\n"))
 			break;
 
 		// 5.2 send them to the server

@@ -26,12 +26,8 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 	srvaddr.sin_addr.s_addr = inet_addr(argv[1]);
 	srvaddr.sin_port = htons(atoi(argv[2]));
 
-	// 3. connect to the server and get an ID
+	// 3. connect to the server
 	Connect(fd, (struct sockaddr *)&srvaddr, len);
-
-	char ID[6] = {0};
-	Read(fd, ID, 6);
-	printf("my ID: %d\n", atoi(ID));
 
 	fd_set rset;
 
@@ -51,13 +47,7 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 		if(FD_ISSET(fd, &rset))
 		{
 			bzero(msg, MAXMSGLEN);
-			int n = Read(fd, msg, MAXMSGLEN);
-
-			if(n == 0)
-			{
-				printf("server has been shutdown.\n");
-				exit(0);
-			}
+			Read(fd, msg, MAXMSGLEN);
 
 			printf("from server: %s", msg);
 		}
@@ -70,13 +60,6 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 				break;
 
 			Write(fd, msg, strlen(msg));
-
-			/*
-			char ack[32] = {0};
-			Read(fd, ack, 32);
-			if(strlen(ack) > 0)
-				printf("%s", ack);
-			*/
 		}
 
 	}

@@ -1,5 +1,7 @@
-CPPFLAGS += -I. -DDEBUG
-LDFLAGS  += 
+CPPFLAGS = -I.
+
+LDFLAGS += -L.
+LDFLAGS += -lpthread
 
 all:server.elf client.elf
 

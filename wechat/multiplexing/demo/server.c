@@ -7,12 +7,9 @@ typedef struct node
 	char *ip;
 	unsigned short port;
 
-	int ID;
+	unsigned short ID;
 	struct list_head list;
 }listnode, *linklist;
-
-linklist g_head = NULL;
-
 
 linklist init_list(void)
 {
@@ -27,7 +24,7 @@ linklist init_list(void)
 	return head;
 }
 
-linklist newnode(int fd, struct sockaddr_in *addr, int ID)
+linklist newnode(int fd, struct sockaddr_in *addr)
 {
 	linklist new = calloc(1, sizeof(listnode));
 	if(new == NULL)
@@ -40,7 +37,7 @@ linklist newnode(int fd, struct sockaddr_in *addr, int ID)
 	new->ip = inet_ntoa(addr->sin_addr);
 	new->port = ntohs(addr->sin_port);
 
-	new->ID = ID;
+	new->ID = new->port;
 
 	INIT_LIST_HEAD(&new->list);
 }
@@ -54,66 +51,12 @@ void usage(int argc, char **argv)
 	}
 }
 
-
-bool private_msg(linklist sender, int receiver_ID, char *msg)
-{
-	assert(sender);
-
-#ifdef DEBUG
-	printf("private msg: %s", msg);
-	printf("private ID:  %d\n", receiver_ID);
-#endif
-
-	linklist client;
-	struct list_head *pos;
-
-	list_for_each(pos, &g_head->list)
-	{
-		client = list_entry(pos, listnode, list);
-
-		if(client->ID != receiver_ID)
-			continue;
-
-		Write(client->fd, msg, strlen(msg));
-		return true;
-	}
-
-	return false;
-}
-
-
-void broadcast_msg(linklist sender, char *msg)
-{
-	assert(sender);
-
-#ifdef DEBUG
-	printf("broadcasting msg: %s", msg);
-#endif
-
-	linklist client;
-	struct list_head *pos;
-
-	list_for_each(pos, &g_head->list)
-	{
-		client = list_entry(pos, listnode, list);
-
-		if(client->ID == sender->ID)
-			continue;
-
-		Write(client->fd, msg, strlen(msg));
-	}
-}
-
 int main(int argc, char **argv) // ./server 50001
 {
 	usage(argc, argv);
 
 	// 1. create a communication point(TCP)
-	//    and turn on REUSEADDR
 	int fd = Socket(AF_INET, SOCK_STREAM, 0);
-
-	int on = 1;
-	Setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
 	// 2. binding fd with IP+PORT
 	struct sockaddr_in srvaddr, cliaddr;
@@ -131,21 +74,20 @@ int main(int argc, char **argv) // ./server 50001
 	Listen(fd, 3);
 
 	// 4. create a linklist to store clients
-	g_head = init_list();
+	linklist head = init_list();
 
 	fd_set rset;
 	int maxfd = fd;
 	struct list_head *pos, *n;
 
 	// 5. waiting for connection and datas
-	srand(time(NULL));
 	while(1)
 	{
 		// 5.1 add all of fds into rset
 		FD_ZERO(&rset);
 		FD_SET(fd, &rset);
 
-		list_for_each(pos, &g_head->list)
+		list_for_each(pos, &head->list)
 		{
 			linklist p = list_entry(pos, listnode, list);
 
@@ -163,24 +105,18 @@ int main(int argc, char **argv) // ./server 50001
 			len = sizeof(cliaddr);
 			int connfd = Accept(fd, (struct sockaddr *)&cliaddr, &len);
 
-			// welcome and assign an random ID for the new client
+			// welcome
 			printf("welcome new connection: [%s:%hu]\n",
 				inet_ntoa(cliaddr.sin_addr),
 				ntohs(cliaddr.sin_port));
-			int ID = rand() % 100000;
 
 			// add the new client to linklist
-			linklist new = newnode(connfd, &cliaddr, ID);
-			list_add_tail(&new->list, &g_head->list);
-
-			// inform the new client his ID
-			char id[6] = {0};
-			snprintf(id, 6, "%d", ID);
-			Write(connfd, id, strlen(id));
+			linklist new = newnode(connfd, &cliaddr);
+			list_add_tail(&new->list, &head->list);
 		}
 
 		// 5.4 testing whether or not data from client has received
-		list_for_each_safe(pos, n, &g_head->list)
+		list_for_each_safe(pos, n, &head->list)
 		{
 			linklist p = list_entry(pos, listnode, list);
 
@@ -192,30 +128,8 @@ int main(int argc, char **argv) // ./server 50001
 
 			if(nread > 0)
 			{
-				// client exit/quit
-				if(!strcmp(msg, "exit\n") || !strcmp(msg, "quit\n"))
-				{
-					printf("[%s:%hu] has quitted.\n",
-						p->ip, p->port);
-	
-					list_del(pos);
-					free(p);
-				}
-
-				char *realmsg = strstr(msg, ":");
-
-				// private message
-				if(realmsg != NULL)
-				{
-					if(!private_msg(p, atoi(msg), realmsg+1))
-						printf("no such client.\n");
-				}
-
-				// broadcasting message
-				else
-				{
-					broadcast_msg(p, msg);
-				}
+				printf("from [%s:%hu]: %s",
+					p->ip, p->port, msg);
 			}
 
 			else if(nread == 0)

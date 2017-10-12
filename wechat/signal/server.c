@@ -55,12 +55,9 @@ int main(int argc, char **argv) // ./udp_srv 50001
 	// 5. turn on the synchronous mode
 	fcntl(g_sockfd, F_SETFL, O_ASYNC);
 	
-	// 6. do something else, waitting for SIGIO
-	int count = 1;
+	// 6. waitting for SIGIO
 	while(1)
 	{
-		printf("count: %d\n", count);
-		count++;
-		sleep(1);
+		pause();
 	}
 }

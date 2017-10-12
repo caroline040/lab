@@ -8,9 +8,7 @@ ssize_t Write(int fd, const void *buf, size_t nbyte)
 	if(n == -1)
 	{
 		perror("write() error");
-
-		if(errno != EAGAIN)
-			exit(0);
+		exit(0);
 	}
 
 	return n;
@@ -24,9 +22,7 @@ ssize_t Read(int fd, void *buf, size_t nbyte)
 	if(n == -1)
 	{
 		perror("read() failed");	
-
-		if(errno != EAGAIN)
-			exit(0);
+		exit(0);
 	}
 	return n;
 }
@@ -58,13 +54,10 @@ int Listen(int sockfd, int backlog)
 int Accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
 	int n = accept(sockfd, addr, addrlen);
-
 	if(n == -1)
 	{
 		perror("accept() failed");
-
-		if(errno != EAGAIN)
-			exit(0);
+		exit(0);
 	}
 
 	return n;
@@ -76,9 +69,7 @@ int Connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 	if(n == -1)
 	{
 		perror("connect() error");
-
-		if(errno != EAGAIN)
-			exit(0);
+		exit(0);
 	}
 
 	return n;
@@ -119,7 +110,7 @@ int Select(int nfds, fd_set *readfds, fd_set *writefds,
 	}
 	else if(n == 0)
 	{
-		fprintf(stderr, "time out.\n");
+		fprintf(stderr, "time out\n");
 	}
 
 	return n;

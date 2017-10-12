@@ -1,4 +1,4 @@
-CPPFLAGS += -I. -DDEBUG
+CPPFLAGS += -I.
 LDFLAGS  += 
 
 all:server.elf client.elf
