@@ -7,12 +7,9 @@ typedef struct node
 	char *ip;
 	unsigned short port;
 
-	int ID;
+	unsigned short ID;
 	struct list_head list;
 }listnode, *linklist;
-
-linklist g_head = NULL;
-
 
 linklist init_list(void)
 {
@@ -27,7 +24,7 @@ linklist init_list(void)
 	return head;
 }
 
-linklist newnode(int fd, struct sockaddr_in *addr, int ID)
+linklist newnode(int fd, struct sockaddr_in *addr)
 {
 	assert(addr);
 
@@ -42,7 +39,7 @@ linklist newnode(int fd, struct sockaddr_in *addr, int ID)
 	new->ip = inet_ntoa(addr->sin_addr);
 	new->port = ntohs(addr->sin_port);
 
-	new->ID = ID;
+	new->ID = new->port;
 
 	INIT_LIST_HEAD(&new->list);
 }
@@ -55,46 +52,6 @@ void usage(int argc, char **argv)
 		exit(0);
 	}
 }
-
-bool private_msg(linklist sender, int receiver_ID, char *msg)
-{
-	assert(sender);
-
-	linklist client;
-	struct list_head *pos;
-
-	list_for_each(pos, &g_head->list)
-	{
-		client = list_entry(pos, listnode, list);
-
-		if(client->ID != receiver_ID)
-			continue;
-
-		Write(client->fd, msg, strlen(msg));
-		return true;
-	}
-
-	return false;
-}
-
-void broadcast_msg(linklist sender, char *msg)
-{
-	assert(sender);
-
-	linklist client;
-	struct list_head *pos;
-
-	list_for_each(pos, &g_head->list)
-	{
-		client = list_entry(pos, listnode, list);
-
-		if(client->ID == sender->ID)
-			continue;
-
-		Write(client->fd, msg, strlen(msg));
-	}
-}
-
 
 int main(int argc, char **argv) // ./server 50001
 {
@@ -124,12 +81,11 @@ int main(int argc, char **argv) // ./server 50001
 	fcntl(fd, F_SETFL, status);
 
 	// 5. create a linklist to store clients
-	g_head = init_list();
+	linklist head = init_list();
 
 	// 6. waiting for connection and datas
 	len = sizeof(cliaddr);
 	char *msg = malloc(MAXMSGLEN);
-	srand(time(NULL));
 	while(1)
 	{
 		// 6.1 waiting for connection
@@ -139,31 +95,25 @@ int main(int argc, char **argv) // ./server 50001
 		// 6.2 no connection is available
 		if(connfd > 0)
 		{
-			// 6.2.1 welcome and assign a random ID
+			// 6.2.1 welcome
 			printf("new connection: [%s:%hu]\n",
 				inet_ntoa(cliaddr.sin_addr),
 				ntohs(cliaddr.sin_port));
-			int ID = rand() % 100000;
 
-			// 6.2.2 inform the new client his ID
-			char id[6] = {0};
-			snprintf(id, 6, "%d", ID);
-			Write(connfd, id, strlen(id));
-
-			// 6.2.3 set new connection to NON-block
+			// 6.2.2 set new connection to NON-block
 			long status = fcntl(connfd, F_GETFL);
 			status |= O_NONBLOCK;
 			fcntl(connfd, F_SETFL, status);
 
-			// 6.2.4 add the new client to linklist
-			linklist new = newnode(connfd, &cliaddr, ID);
-			list_add_tail(&new->list, &g_head->list);
+			// 6.2.3 add the new client to linklist
+			linklist new = newnode(connfd, &cliaddr);
+			list_add_tail(&new->list, &head->list);
 		}
 
 		// 6.3 iterate over the clients-list
 		struct list_head *pos, *n;
 		linklist p;
-		list_for_each_safe(pos, n, &g_head->list)
+		list_for_each_safe(pos, n, &head->list)
 		{
 			p = list_entry(pos, listnode, list);
 
@@ -172,31 +122,10 @@ int main(int argc, char **argv) // ./server 50001
 			int nread = Read(p->fd, msg, MAXMSGLEN);
 			if(nread > 0)
 			{
-				// client exit/quit
-				if(!strcmp(msg, "exit\n") || !strcmp(msg, "quit\n"))
-				{
-					printf("[%s:%hu] has quitted.\n",
-						p->ip,
-						p->port);
-
-					list_del(pos);
-					free(p);
-				}
-
-				char *realmsg = strstr(msg, ":");
-
-				// private message
-				if(realmsg != NULL)
-				{
-					if(!private_msg(p, atoi(msg), realmsg+1))
-						printf("no such client.\n");
-				}
-
-				// broadcastint message
-				else
-				{
-					broadcast_msg(p, msg);
-				}
+				printf("from [%s:%hu]: %s",
+					p->ip,
+					p->port,
+					msg);
 			}
 			else if(nread == 0)
 			{

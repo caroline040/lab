@@ -26,11 +26,8 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 	srvaddr.sin_addr.s_addr = inet_addr(argv[1]);
 	srvaddr.sin_port = htons(atoi(argv[2]));
 
-	// 3. connect to the server and get a new ID
+	// 3. connect to the server
 	Connect(fd, (struct sockaddr *)&srvaddr, len);
-	char id[6] = {0};
-	Read(fd, id, 6);
-	printf("my ID: %s\n", id);
 
 	// 4. set file status flags specified with NON-block
 	long status;

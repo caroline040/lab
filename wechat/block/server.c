@@ -12,7 +12,7 @@ typedef struct node
 }listnode, *linklist;
 
 linklist g_head = NULL;
-
+pthread_mutex_t m = PTHREAD_MUTEX_INITIALIZER;
 
 linklist init_list(void)
 {
@@ -65,17 +65,22 @@ bool private_msg(linklist sender, int receiver_ID, char *msg)
 	linklist p;
 	struct list_head *pos;
 
+	pthread_mutex_lock(&m);
 	list_for_each(pos, &g_head->list)
 	{
 		p = list_entry(pos, listnode, list);
 
 		if(p->ID != receiver_ID)
+		{
 			continue;
+		}
 
 		Write(p->fd, msg, strlen(msg));
+		pthread_mutex_unlock(&m);
 		return true;
 	}
 
+	pthread_mutex_unlock(&m);
 	return false;
 }
 
@@ -90,6 +95,7 @@ void broadcast_msg(linklist sender, char *msg)
 	linklist p;
 	struct list_head *pos;
 
+	pthread_mutex_lock(&m);
 	list_for_each(pos, &g_head->list)
 	{
 		p = list_entry(pos, listnode, list);
@@ -99,6 +105,7 @@ void broadcast_msg(linklist sender, char *msg)
 
 		Write(p->fd, msg, strlen(msg));
 	}
+	pthread_mutex_unlock(&m);
 }
 
 void *routine(void *arg)
@@ -108,22 +115,20 @@ void *routine(void *arg)
 	linklist client = (linklist)arg;
 
 	// inform client his ID
-	char ID[6];
-	snprintf(ID, 6, "%d", client->ID);
+	char ID[5];
+	snprintf(ID, 5, "%d", client->ID);
 	Write(client->fd, ID, strlen(ID));
 
 	char *msg = calloc(1, MAXMSGLEN);
 	while(1)
 	{
 		bzero(msg, MAXMSGLEN);
-		if(Read(client->fd, msg, MAXMSGLEN) == 0)
-			break;
 
 		// client exit/quit
-		if(!strcmp(msg, "exit\n") || !strcmp(msg, "quit\n"))
+		if(Read(client->fd, msg, MAXMSGLEN) == 0 ||
+		   !strcmp(msg, "exit\n") ||
+		   !strcmp(msg, "quit\n"))
 		{
-			list_del(&client->list);
-			free(client);
 			break;
 		}
 
@@ -145,13 +150,20 @@ void *routine(void *arg)
 	printf("[%s:%hu] has quited.\n",
 			client->ip,
 			client->port);
+
+	list_del(&client->list);
+	free(client);
+
+	pthread_exit(NULL);
 }
+
 
 int main(int argc, char **argv) // ./server 50001
 {
 	usage(argc, argv);
 
 	// 1. create a communication point(TCP)
+	//    and turn on REUSEADDR
 	int fd = Socket(AF_INET, SOCK_STREAM, 0);
 
 	int on = 1;
@@ -191,11 +203,13 @@ int main(int argc, char **argv) // ./server 50001
 			printf("new connection: [%s:%hu]\n",
 				inet_ntoa(cliaddr.sin_addr),
 				ntohs(cliaddr.sin_port));
-			int ID = rand() % 100000;
+			int ID = rand() % 10000;
 
 			// 5.2 add the new client to linklist
 			linklist new = newnode(connfd, &cliaddr, ID);
+			pthread_mutex_lock(&m);
 			list_add_tail(&new->list, &g_head->list);
+			pthread_mutex_unlock(&m);
 	
 			// 5.3 create a new thread to handler this client
 			pthread_create(&tid, NULL, routine, (void *)new);

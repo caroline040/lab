@@ -50,8 +50,8 @@ int main(int argc, char **argv) // ./client 192.168.1.100 50001
 
 	// 3. connect to the server and get an ID
 	Connect(fd, (struct sockaddr *)&srvaddr, len);
-	char ID[6] = {0};
-	Read(fd, ID, 6);
+	char ID[5] = {0};
+	Read(fd, ID, 5);
 	printf("my ID: %s\n", ID);
 
 
