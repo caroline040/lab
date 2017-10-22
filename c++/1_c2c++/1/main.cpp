@@ -7,6 +7,7 @@ int main(void)
     char step = 'a' - 'A';
 
 #if 0
+    cout << "请输入任意一个字母:" << endl;
     char ch;
 
     while(1)
@@ -25,6 +26,7 @@ int main(void)
 #endif
 
 #if 1
+    cout << "请输入一串字符:" << endl;
     string s;
 
     while(1)
@@ -39,6 +41,9 @@ int main(void)
 
             else if(islower(s[i]))
                 cout << char(s[i] - step);
+
+	    else
+		cout << s[i];
         }
         cout << endl;
     }

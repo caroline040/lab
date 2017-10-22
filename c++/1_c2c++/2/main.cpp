@@ -6,10 +6,10 @@ int main(void)
 {
     cout << "请输入天数（整数）:" << endl;
 
-    char days;
+    int days;
     cin >> days;
 
-    if(days < 0 || !isdigit(days))
+    if(days < 0)
     {
         cout << "非法输入，再见！" << endl;
         return 0;
