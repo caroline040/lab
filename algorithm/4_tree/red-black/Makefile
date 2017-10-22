@@ -13,4 +13,4 @@ rb.elf:$(SRC) rb_test.c
 	$(CC) $^ -o $@ $(CPPFLAGS)
 
 clean:
-	$(RM) rb
+	$(RM) rb.elf

@@ -69,8 +69,8 @@ static int Color(linktree n)
 }
 
 
-void rotate_left(linktree *proot, linktree n);
-void rotate_right(linktree *proot, linktree n);
+void rb_rotate_left(linktree *proot, linktree n);
+void rb_rotate_right(linktree *proot, linktree n);
 
 linktree rb_find(linktree root, tn_datatype data);
 linktree bst_insert(linktree root, linktree new);

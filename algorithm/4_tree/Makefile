@@ -1,9 +1,9 @@
-CFLAGS = -Iheaders -g
-BIN = bst avl rb
+CFLAGS = -I./headers -g
+BIN = bst.elf avl.elf
 
 all:$(BIN)
 
-$(BIN):%:%.o drawtree.o queue.o travel.o
+$(BIN):%.elf:%.o drawtree.o queue.o travel.o
 	$(CC) -o $@ $^ $(CFLAGS)
 
 
@@ -19,10 +19,6 @@ bst.o:bst.c
 avl.o:avl.c
 	$(CC) -o drawtree.o drawtree.c -c $(CFLAGS) -DAVL
 	$(CC) -o $@ $< -c $(CFLAGS) -DAVL
-
-rb.o:rb.c
-	$(CC) -o drawtree.o drawtree.c -c $(CFLAGS) -DRB
-	$(CC) -o $@ $< -c $(CFLAGS) -DRB
 
 clean:
 	$(RM) *.o $(BIN)
