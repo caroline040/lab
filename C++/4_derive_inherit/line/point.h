@@ -2,7 +2,7 @@
 //
 // Copyright(C) 2013-2017, GEC Tech. Co., Ltd.
 //
-// 文件：lab/C++/3_class/line/point.h
+// 文件：lab/C++/4_derive_inherit/line/point.h
 // 日期：2017-10
 // 描述：point类的设计
 //

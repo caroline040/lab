@@ -2,7 +2,7 @@
 //
 // Copyright(C) 2013-2017, GEC Tech. Co., Ltd.
 //
-// 文件：lab/C++/3_class/line/line.h
+// 文件：lab/C++/4_derive_inherit/line/line.h
 // 日期：2017-10
 // 描述：line类的设计
 //

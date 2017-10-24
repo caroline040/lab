@@ -2,7 +2,7 @@
 //
 // Copyright(C) 2013-2017, GEC Tech. Co., Ltd.
 //
-// 文件：lab/C++/3_class/line/main.cpp
+// 文件：lab/C++/4_derive_inherit/line/main.cpp
 // 日期：2017-10
 // 描述：使用线段，包含点，体会has-a逻辑关系
 //
