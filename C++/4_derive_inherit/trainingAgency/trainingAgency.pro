@@ -4,10 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    company.cpp \
-    school.cpp
+    trainingAgency.cpp
 
 HEADERS += \
-    company.h \
-    school.h
+    trainingAgency.h
 

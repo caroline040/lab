@@ -1,11 +1,15 @@
 #include <iostream>
-#include "company.h"
-#include "school.h"
+#include "trainingAgency.h"
 
 using namespace std;
 
 int main()
 {
+    trainingAgency GEC;
+
+    GEC.payTaxes();
+    GEC.termBegin();
+
     return 0;
 }
 
