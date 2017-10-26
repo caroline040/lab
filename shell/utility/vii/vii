@@ -3,27 +3,33 @@
 if [ $# -eq 0 ]
 then
 	vi
+	exit
 fi
 
-if [ $# -eq 1 ]
+if [ $# -ge 2 ]
 then
-	suffix=`echo $1 | sed "s/\(.*\)\(\..\)$/\2/"`
-	if [  $suffix != ".c" ] || [ -e $1 ]
+	echo "参数太多了！"
+	exit
+fi
+
+
+if [ -e $1 ] # 文件已存在，一律直接打开不作任何处理
+then
+	vi $1
+	exit
+else
+	suffix=`echo "$1" | sed 's/^.*\./\./'`
+
+	# 如果是C语言程序，搞个模板开始编辑
+	if [ $suffix = ".c" ]
 	then
+		cp /bin/sample.c $1
+		vi $1
+		exit
+
+	# 否则，直接编辑空文件
+	else
 		vi $1
 		exit
 	fi
 fi
-
-
-sample="/bin/sample.c"
-
-if [ ! -e $sample ]
-then
-	echo "$sample is NOT exist"
-	exit
-else
-	cp $sample $1
-	vi $1
-fi
-
