@@ -4,7 +4,7 @@ count=1
 
 while :
 do
-	if [ $count -gt 100 ]
+	if [ $count -gt 10 ]
 	then
 		break
 	fi
