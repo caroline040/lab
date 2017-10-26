@@ -1,24 +1,23 @@
 #!/bin/bash
 
-full_path_files=`grep 'awk' . -Hnrw | awk 'BEGIN{FS=":"} {print $1}' | uniq`
-bk="awks"
-
-if [ ! -d $bk ]
+if [ $# -ne 1 ]
 then
-	mkdir $bk
+	echo "必须提供一个需要查找的字符串"
+	exit
 fi
 
-for full_path_file in $full_path_files
-do
-	echo $full_path_file > files
-	file_name=`awk 'BEGIN{FS="/"} {print $NF}' files`
+filepath=`grep "$1" . -HIrwn --exclude-dir=$1_bk | awk -F: '{print $1}' | sort | uniq`
 
-	if [ -e "$bk/$file_name" ]
-	then
-		n=`ls $bk/$file_name* | wc -w`
-		n=$(($n + 1))
-		cp $full_path_file $bk/$file_name$n
-	else
-		cp $full_path_file $bk/$file_name
-	fi
+if [ ! -e $1_bk ]
+then
+	mkdir $1_bk
+fi
+
+
+for file in $filepath
+do
+	dir=` echo "$file" | sed 's/\/[^/]*$//'`
+
+	mkdir -p $1_bk/$dir
+	cp $file $1_bk/$dir
 done
