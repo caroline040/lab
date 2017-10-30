@@ -5,7 +5,7 @@
 #include <cstdbool>
 #include <cerrno>
 
-#include "jpeglib.h"
+#include "wrap.h"
 
 using namespace std;
 
@@ -108,6 +108,21 @@ int main(int argc, char **argv)
 {
     usage(argc, argv);
 
+    // 初始化LCD
+    struct fb_var_screeninfo vinfo;
+    char *fbmem = NULL;
+    if(!lcd_init(&vinfo, &fbmem))
+    {
+        exit(0);
+    }
+
+    // 解码并显示JPG图片
+    char *rgb = NULL;
+    struct image_info imginfo;
+    decompress_jpg(argv[1], &rgb, &imginfo);
+    write_lcd(rgb, &imginfo, fbmem, &vinfo);
+
+    /*
     ifstream jpg;
     jpg.open(argv[1], ios_base::binary);
 
@@ -122,6 +137,7 @@ int main(int argc, char **argv)
     display(rgb);
 
     delete [] rgb;
+    */
 
     return 0;
 }
