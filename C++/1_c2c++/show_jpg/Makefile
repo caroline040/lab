@@ -33,7 +33,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = show_jpg1.0.0
-DISTDIR = /mnt/hgfs/codes/C++/experiment/1_c2c++/show_jpg/.tmp/show_jpg1.0.0
+DISTDIR = /home/gec/git/lab/C++/1_c2c++/show_jpg/.tmp/show_jpg1.0.0
 LINK          = arm-none-linux-gnueabi-g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) -L./jpeg-9.0/lib -ljpeg -Wl,-rpath=./jpeglib/lib 
@@ -48,8 +48,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp 
-OBJECTS       = main.o
+SOURCES       = main.cpp \
+		wrap.c 
+OBJECTS       = main.o \
+		wrap.o
 DIST          = /home/gec/utilities/qt-5.5/mkspecs/features/spec_pre.prf \
 		/home/gec/utilities/qt-5.5/mkspecs/common/unix.conf \
 		/home/gec/utilities/qt-5.5/mkspecs/common/linux.conf \
@@ -126,7 +128,8 @@ DIST          = /home/gec/utilities/qt-5.5/mkspecs/features/spec_pre.prf \
 		/home/gec/utilities/qt-5.5/mkspecs/features/exceptions.prf \
 		/home/gec/utilities/qt-5.5/mkspecs/features/yacc.prf \
 		/home/gec/utilities/qt-5.5/mkspecs/features/lex.prf \
-		show_jpg.pro  main.cpp
+		show_jpg.pro wrap.h main.cpp \
+		wrap.c
 QMAKE_TARGET  = show_jpg
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = show_jpg
@@ -352,11 +355,19 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp jpeg-9.0/include/jpeglib.h \
+main.o: main.cpp wrap.h \
+		jpeg-9.0/include/jpeglib.h \
 		jpeg-9.0/include/jconfig.h \
 		jpeg-9.0/include/jmorecfg.h \
 		jpeg-9.0/include/jerror.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+wrap.o: wrap.c wrap.h \
+		jpeg-9.0/include/jpeglib.h \
+		jpeg-9.0/include/jconfig.h \
+		jpeg-9.0/include/jmorecfg.h \
+		jpeg-9.0/include/jerror.h
+	$(CC) -c $(CFLAGS) $(INCPATH) -o wrap.o wrap.c
 
 ####### Install
 

@@ -4,7 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    wrap.c
+    wrap.c \
+    lcd.cpp
 
 INCLUDEPATH += ./jpeg-9.0/include
 
@@ -13,4 +14,5 @@ LIBS        += -ljpeg
 LIBS        += -Wl,-rpath=./jpeglib/lib
 
 HEADERS += \
-    wrap.h
+    wrap.h \
+    lcd.h
