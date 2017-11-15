@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'httpinfo.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -20,7 +20,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolBar>
@@ -39,7 +38,6 @@ public:
     QHBoxLayout *horizontalLayout;
     QLabel *label;
     QLabel *dataLebel;
-    QSpacerItem *horizontalSpacer;
     QLabel *label_4;
     QLabel *timeLabel;
     QPushButton *getTimeBt;
@@ -58,7 +56,7 @@ public:
     {
         if (HttpInfo->objectName().isEmpty())
             HttpInfo->setObjectName(QStringLiteral("HttpInfo"));
-        HttpInfo->resize(762, 435);
+        HttpInfo->resize(459, 435);
         centralWidget = new QWidget(HttpInfo);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -83,10 +81,6 @@ public:
         dataLebel->setObjectName(QStringLiteral("dataLebel"));
 
         horizontalLayout->addWidget(dataLebel);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout->addItem(horizontalSpacer);
 
         label_4 = new QLabel(centralWidget);
         label_4->setObjectName(QStringLiteral("label_4"));
@@ -135,6 +129,7 @@ public:
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
         label_5 = new QLabel(centralWidget);
         label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setMaximumSize(QSize(40, 16777215));
 
         horizontalLayout_4->addWidget(label_5);
 
@@ -157,7 +152,7 @@ public:
         HttpInfo->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(HttpInfo);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 762, 23));
+        menuBar->setGeometry(QRect(0, 0, 459, 22));
         HttpInfo->setMenuBar(menuBar);
         mainToolBar = new QToolBar(HttpInfo);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -178,11 +173,11 @@ public:
         dataLebel->setText(QApplication::translate("HttpInfo", "2016-5-25", 0));
         label_4->setText(QApplication::translate("HttpInfo", "\346\227\266\351\227\264\357\274\232", 0));
         timeLabel->setText(QApplication::translate("HttpInfo", "00\357\274\23200\357\274\23200", 0));
-        getTimeBt->setText(QApplication::translate("HttpInfo", "getTime", 0));
-        getWeatherBt->setText(QApplication::translate("HttpInfo", "getWeather", 0));
+        getTimeBt->setText(QApplication::translate("HttpInfo", "\350\216\267\345\217\226\346\227\266\351\227\264", 0));
+        getWeatherBt->setText(QApplication::translate("HttpInfo", "\350\216\267\345\217\226\345\244\251\346\260\224", 0));
         label_5->setText(QApplication::translate("HttpInfo", "\345\237\216\345\270\202\357\274\232", 0));
-        addressLabel->setText(QApplication::translate("HttpInfo", "----------------------", 0));
-        getAddressBt->setText(QApplication::translate("HttpInfo", "getAddress", 0));
+        addressLabel->setText(QApplication::translate("HttpInfo", "------", 0));
+        getAddressBt->setText(QApplication::translate("HttpInfo", "\350\216\267\345\217\226\345\275\223\345\211\215\345\234\260\347\220\206\344\275\215\347\275\256", 0));
     } // retranslateUi
 
 };

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>762</width>
+    <width>459</width>
     <height>435</height>
    </rect>
   </property>
@@ -36,19 +36,6 @@
            </widget>
           </item>
           <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>时间：</string>
@@ -73,7 +60,7 @@
         <item>
          <widget class="QPushButton" name="getTimeBt">
           <property name="text">
-           <string>getTime</string>
+           <string>获取时间</string>
           </property>
          </widget>
         </item>
@@ -87,7 +74,7 @@
         <item>
          <widget class="QPushButton" name="getWeatherBt">
           <property name="text">
-           <string>getWeather</string>
+           <string>获取天气</string>
           </property>
          </widget>
         </item>
@@ -111,14 +98,14 @@
         <item>
          <widget class="QLabel" name="addressLabel">
           <property name="text">
-           <string>----------------------</string>
+           <string>------</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="getAddressBt">
           <property name="text">
-           <string>getAddress</string>
+           <string>获取当前地理位置</string>
           </property>
          </widget>
         </item>
@@ -133,8 +120,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>762</width>
-     <height>23</height>
+     <width>459</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

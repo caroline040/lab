@@ -24,15 +24,15 @@ public:
 
 private slots:
     void on_getTimeBt_clicked();
-
     void on_getWeatherBt_clicked();
-
     void on_getAddressBt_clicked();
 
     //获取时间槽函数
     void get_time(QNetworkReply* reply);
     void get_weather(QNetworkReply* reply);
     void get_address(QNetworkReply* reply);
+
+    void readReply();
 
 private:
     Ui::HttpInfo *ui;

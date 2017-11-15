@@ -8,10 +8,13 @@ HttpInfo::HttpInfo(QWidget *parent) :
     ui(new Ui::HttpInfo)
 {
     ui->setupUi(this);
-    //this->showFullScreen();
+
     managerAddress = NULL;
-    managerTime = NULL;
     managerWeather = NULL;
+    managerTime = new QNetworkAccessManager();
+
+    connect(managerTime, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(get_time(QNetworkReply*)));
 }
 
 HttpInfo::~HttpInfo()
@@ -25,29 +28,14 @@ HttpInfo::~HttpInfo()
 //获取当前北京时间
 void HttpInfo::on_getTimeBt_clicked()
 {
-    if(managerTime == NULL)
-    {
-        managerTime = new QNetworkAccessManager();
-        connect(managerTime, SIGNAL(finished(QNetworkReply*)), this, SLOT(get_time(QNetworkReply*)));
-    }
-
-    //url地址
-    QUrl url("http://gb.weather.gov.hk/cgi-bin/hko/localtime.pl");
     //创建请求
-    QNetworkRequest request(url);
-    //通过管理器获取数据
-    managerTime->get(request);
+    QNetworkRequest request(QUrl("http://gb.weather.gov.hk/cgi-bin/hko/localtime.pl"));
 
+    //通过管理器试图向网络获取数据，数据就绪时，managerTime将会触发readyRead()信号
+    QNetworkReply *reply = managerTime->get(request);
 
-
-    //T弹出窗口
-    QWidget *win = new QWidget();
-    win->setGeometry(100,  300, 200,200);
-    QLabel *lab = new QLabel(win);
-    lab->setText("55555555555555555555");
-    lab->resize(200, 200);
-    win->show();
-
+    connect(reply, SIGNAL(readyRead()),
+            this, SLOT(readReply()));
 }
 
 //获取当前天气
@@ -105,7 +93,7 @@ void HttpInfo::get_weather(QNetworkReply* reply)
         QJsonValue val = obj.value("weatherinfo");
         obj = val.toObject();
         ui->textEdit->append(obj.value("temp1").toString());
-       ui->textEdit->append(obj.value("temp2").toString());
+        ui->textEdit->append(obj.value("temp2").toString());
         ui->textEdit->append(obj.value("weather").toString());
     }
 
@@ -123,4 +111,9 @@ void HttpInfo::get_address(QNetworkReply* reply)
 
     msg = list.at(1);
     ui->addressLabel->setText(msg.remove('\''));
+}
+
+void HttpInfo::readReply()
+{
+    qDebug() << __FUNCTION__;
 }
