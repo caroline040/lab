@@ -15,9 +15,6 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-#define ASC  1 // 升序
-#define DESC 2 // 降序
-
 void show(int numbers[], int len)
 {
 	int i;
@@ -28,36 +25,47 @@ void show(int numbers[], int len)
 	printf("\n");
 }
 
-void bubble_sort(int numbers[], int len, int order)
+void _merge(int n1[], int len1,
+	    int n2[], int len2)
 {
-	printf("冒泡%s序排序：\n", order==ASC ? "升":"降");
+	assert(n1);
+	assert(n2);
 
-	while(1)
+	int n[len1 + len2];
+
+	int i, j;
+	int k;
+	for(i=0, j=0, k=0; ; k++)
 	{
-		bool done = true;
+		n[k] = n1[i] < n2[j] ? n1[i++] : n2[j++];
 
-		int i;
-		for(i=0; i<len-1; i++)
+		if(i == len1)
 		{
-			if((order==ASC)?(numbers[i] < numbers[i+1]):(numbers[i]>numbers[i+1]))
-			{
-				continue;
-			}
-		
-			int tmp;
-			tmp = numbers[i+1];
-			numbers[i+1] = numbers[i];
-			numbers[i] = tmp;
-
-			done = false;
-		}
-
-		if(done)
+			memcpy(&n[k+1], &n2[j], (len2-j)*sizeof(int));
 			break;
-
-		show(numbers, len);
+		}
+		if(j == len2)
+		{
+			memcpy(&n[k+1], &n1[i], (len1-i)*sizeof(int));
+			break;
+		}
 	}
 
+	memcpy(n1, n, (len1+len2) * sizeof(int));
+}
+
+void merge_sort(int numbers[], int len)
+{
+	if(len <= 1)
+		return;
+
+	int mid = len/2;
+
+	merge_sort(numbers+0,   mid);
+	merge_sort(numbers+mid, len-mid);
+
+	_merge(numbers + 0  , mid,
+	       numbers + mid, len-mid);
 }
 
 int main(int argc, char **argv)
@@ -73,11 +81,10 @@ int main(int argc, char **argv)
 	printf("排序前的随机数：\n");
 	show(numbers, 10);
 
-	// bubble sort
-	bubble_sort(numbers, 10, ASC);  // 按升序排列
-	show(numbers, 10);
+	// merge sort
+	merge_sort(numbers, 10);
 
-	bubble_sort(numbers, 10, DESC); // 按降序排列
+	printf("归并排序：\n");
 	show(numbers, 10);
 
 	return 0;

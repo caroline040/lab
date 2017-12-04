@@ -6,7 +6,8 @@ int main(void)
 {
 	int a[LIM];
 	int len = 0;
-	printf("pls input some integers('#' to terminate): ");
+	printf("pls input some"
+		" integers('#' to terminate): ");
 
 	while(scanf("%d", &a[len]) != 0)
 		len++;

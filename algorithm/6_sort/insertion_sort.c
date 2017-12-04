@@ -1,55 +1,54 @@
-// insertion sort
-#include <unistd.h>
-#include <stdlib.h>
+#include <time.h>
 #include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <strings.h>
+#include <pthread.h>
+#include <semaphore.h>
 
-#define SIZE 7
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
-void show(int num[])
+void show(int numbers[], int len)
 {
 	int i;
-	printf("\t");
-	for(i=SIZE; i>0; --i){
-	    printf("%4d", num[SIZE-i]);
+	for(i=0; i<len; ++i)
+	{
+		printf("%d\t", numbers[i]);
 	}
 	printf("\n");
-	return;
 }
 
-void insertion_sort(int num[])
+void insertion_sort(int numbers[], int len)
 {
-	int i, j;
-	int tmp;
+	int tmp[len];
 
-	for(i=1; i<SIZE; i++)
+
+}
+
+int main(int argc, char **argv)
+{
+	// generate some random numbers
+	srand(time(NULL));
+
+	int i, numbers[10];
+	for(i=0; i<10; ++i)
 	{
-		if(num[i-1] < num[i])
-		{
-			show(num);
-			continue;
-		}
-		else
-		{
-			tmp = num[i];
-			for(j=i-1; tmp<num[j] && j>= 0; j--)
-				num[j+1] = num[j];
+		numbers[i] = rand() % 1000;
+	}
+	printf("排序前的随机数：\n");
+	show(numbers, 10);
 
-			num[j+1] = tmp;
-		}
-		show(num);
-	}//for
-}
-
-int main(void)
-{
-	/* original data */
-	int array[SIZE] = {49, 38, 65, 97, 76, 13, 27};
-	printf("the original numbers are:\n");
-	show(array);
-
-	/* insertion sorting */
-	printf("steps of insertion sorting:\n");
-	insertion_sort(array);
+	// insertion sort
+	insertion_sort(numbers, 10, ASC);
+	printf("插入排序后：\n");
+	show(numbers, 10);
 
 	return 0;
 }

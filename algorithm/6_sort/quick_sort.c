@@ -1,72 +1,77 @@
-// quick sorting
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <time.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <strings.h>
+#include <pthread.h>
+#include <semaphore.h>
 
-#define SIZE 7
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
-void show(int num[])
+void show(int numbers[], int len)
 {
-        int i;
-        printf("\t");
-        for(i=SIZE; i>0; --i){
-            printf("%4d", num[SIZE-i]);
-        }
-        printf("\n");
-        return;
-}
-
-int partition(int num[], int low, int high)
-{
-        int pivotloc = num[low];
-
-        while(low < high)
+	int i;
+	for(i=0; i<len; ++i)
 	{
-        /* move the data which is SMALLER than the PIVOT forward */
-            while(low<high && num[high]>=pivotloc)
-                --high;
-            num[low] = num[high];
-        
-            /* move the data which is LARGER than the PIVOT backward */
-            while(low<high && num[low]<=pivotloc)
-                ++low;
-            num[high] = num[low];
-        }
-        num[low] = pivotloc;
-        show(num);
-
-        return low; //return the pivot's location
+		printf("%d\t", numbers[i]);
+	}
+	printf("\n");
 }
 
-void quick_sort(int num[], int low, int high)
+int partition(int numbers[], int len)
 {
-        int pivotloc;
-        if(low < high)
+	int tmp = numbers[0];
+
+	int low = 0;
+	int high= len-1;
+
+	while(low < high)
 	{
-        	/*********
-        	 sampling
-        	**********/
-            pivotloc = partition(num, low, high);
-            /* recurs sorting sub-table */
-            quick_sort(num, low, pivotloc-1);
-            quick_sort(num, pivotloc+1, high);
-        }
-        return;
+		while(low<high && tmp<=numbers[high]) high--;
+		numbers[low] = numbers[high];
+
+		while(low<high && numbers[low]<=tmp) low++;
+		numbers[high] = numbers[low];
+	}
+
+	numbers[low] = tmp;
+	return low;
 }
 
-int main(void)
+void quick_sort(int numbers[], int len)
 {
-        /* original data */
-        int array[SIZE] = {49, 38, 65, 97, 76, 13, 27};
-        printf("the original numbers are:\n");
-        show(array);
+	if(len <= 1)
+		return;
 
-        /* quit sorting */
-        int low=0, high=SIZE-1;
-        printf("steps of quick sorting:\n");
-        quick_sort(array, low, high);
+	int pivot = partition(numbers, len);
 
-        return 0;
+	quick_sort(numbers, pivot);
+	quick_sort(numbers+pivot+1, len-pivot-1);
+}
+
+int main(int argc, char **argv)
+{
+	srand(time(NULL));
+
+	int i, numbers[10];
+	for(i=0; i<10; ++i)
+	{
+		numbers[i] = rand() % 1000;
+	}
+	printf("排序前的随机数：\n");
+	show(numbers, 10);
+
+	quick_sort(numbers, 10);
+
+	printf("快速排序后：\n");
+	show(numbers, 10);
+
+	return 0;
 }

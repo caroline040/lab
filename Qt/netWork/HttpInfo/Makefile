@@ -185,6 +185,7 @@ DIST          = /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/spec_pre.prf 
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/qt_config.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/default_pre.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -353,6 +354,7 @@ Makefile: HttpInfo.pro /Users/vincent040/Qt/5.7/clang_64/mkspecs/macx-clang/qmak
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/qt_config.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/macx-clang/qmake.conf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/exclusive_builds.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/default_pre.prf \
 		/Users/vincent040/Qt/5.7/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -513,6 +515,7 @@ Makefile: HttpInfo.pro /Users/vincent040/Qt/5.7/clang_64/mkspecs/macx-clang/qmak
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/qt_config.prf:
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/macx-clang/qmake.conf:
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/exclusive_builds.prf:
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/default_pre.prf:
 /Users/vincent040/Qt/5.7/clang_64/mkspecs/features/mac/default_pre.prf:
