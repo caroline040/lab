@@ -1,12 +1,15 @@
-PRGS = ${filter-out all_in_all, ${patsubst %.c, %, ${wildcard *.c}}}
-CC = gcc
-CFLAGS = -O0 -g -Wall
+SRC = $(wildcard *.c)
+ELF = $(SRC:%.c=%)
 
-all:$(PRGS)
+#CROSS = arm-none-linux-gnueabi-
+CC = $(CROSS)gcc
 
-$(PRGS):%:%.c
-	- $(CC) $(CFLAGS) -o $@ $^
+LDFLAGS += -lm
 
-.PHONY:clean
+all:$(ELF)
+
+$(ELF):%:%.c
+	$(CC) $^ -o $@ $(LDFLAGS)
+
 clean:
-	-@$(RM) -rf .*.swp *.o $(PRGS)
+	$(RM) $(ELF)

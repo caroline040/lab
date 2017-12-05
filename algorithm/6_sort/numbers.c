@@ -19,7 +19,7 @@
 
 int main(int argc, char **argv)
 {
-	FILE *fp = fopen("numbers", "w");
+	FILE *fp = fopen("numbers.txt", "w");
 
 	srand(time(NULL));
 

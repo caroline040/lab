@@ -1,73 +1,68 @@
-// shell sorting
-
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
-#define SIZE  10
+#define LEN  10
 
-void show(int num[])
+void show(int num[], int len)
 {
 	int i;
-	printf("\t");
-
-	for(i=1; i<SIZE; ++i)
+	for(i=0; i<len; ++i)
 	{
-		printf("%4d", num[i]);
+		printf("%d\t", num[i]);
 	}
 
 	printf("\n");
 	return;
 }
 
-void shell_insert(int num[], int dk)
+void shell_insert(int num[], int len, int dlta)
 {
-	int i, j;
-
-	for(i=dk+1; i<SIZE; ++i)
+	int lh, rh;
+	for(lh=0, rh=dlta; rh<len; lh++, rh++)
 	{
-		if(num[i-dk] > num[i])
-		{
-			num[0] = num[i];
+		if(num[lh] <= num[rh])
+			continue;
 
-			for(j=i-dk; j>0&&(num[0]<num[j]); j-=dk)
-				num[j+dk] = num[j];
-
-			num[j+dk] = num[0];
-		}
+		int tmp;
+		tmp = num[lh];
+		num[lh] = num[rh];
+		num[rh] = tmp;
 	}
+
+	show(num, len);
 }
 
-void shell_sort(int num[], int dlta[], int t)
+void shell_sort(int num[], int len)
 {
-	int k;
-	for(k=0; k<t; ++k)
+	if(len <= 1)
+		return;
+
+	int dlta;
+	for(dlta=len/2; dlta>0; dlta/=2)
 	{
-		shell_insert(num, dlta[k]);
-		show(num);
+		shell_insert(num, len, dlta);
 	}
 }
 
 int main(void)
 {
-	/**************************************************
-	   original data, array[0] for temperary storage
-	***************************************************/
-	int array[SIZE] = {0, 49, 38, 65, 97, 76, 13, 27, 49, 55};
-	printf("the original numbers are:\n");
-	show(array);
+	srand(time(NULL));
 
-	/*****************************************
-	   dlta is the increment serials numbers
-	   the last number must be 1.
-	******************************************/
-	int dlta[4] = {5, 3, 2, 1};
-	printf("steps of shell sorting:\n");
+	int i, numbers[LEN];
+	for(i=0; i<LEN; i++)
+	{
+		int exp = (int)pow(10, rand()%4+1);
+		numbers[i] = rand()%exp;
+	}
+	printf("排序前的随机数：\n");
+	show(numbers, LEN);
 
-	/* shell sorting */
-	shell_sort(array, dlta, 4);
-	show(array);
+	printf("希尔排序：\n");
+	shell_sort(numbers, LEN);
+	show(numbers, LEN);
 
 	return 0;
 }
