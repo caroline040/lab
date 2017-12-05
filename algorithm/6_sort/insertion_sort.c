@@ -27,9 +27,23 @@ void show(int numbers[], int len)
 
 void insertion_sort(int numbers[], int len)
 {
-	int tmp[len];
+	if(len <= 1)
+		return;
 
+	insertion_sort(numbers, len-1);
 
+	int tmp = numbers[len-1];
+
+	int i;
+	for(i=len-2; i>=0; --i)
+	{
+		if(numbers[i] > tmp)
+			numbers[i+1] = numbers[i];
+		else
+			break;
+	}
+
+	numbers[i+1] = tmp;
 }
 
 int main(int argc, char **argv)
@@ -46,7 +60,7 @@ int main(int argc, char **argv)
 	show(numbers, 10);
 
 	// insertion sort
-	insertion_sort(numbers, 10, ASC);
+	insertion_sort(numbers, 10);
 	printf("插入排序后：\n");
 	show(numbers, 10);
 
