@@ -54,10 +54,7 @@ void bubble_sort(int numbers[], int len, int order)
 
 		if(done)
 			break;
-
-		show(numbers, len);
 	}
-
 }
 
 int main(int argc, char **argv)

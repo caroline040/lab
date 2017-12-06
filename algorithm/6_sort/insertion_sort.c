@@ -60,8 +60,8 @@ int main(int argc, char **argv)
 	show(numbers, 10);
 
 	// insertion sort
+	printf("直接插入法排序：\n");
 	insertion_sort(numbers, 10);
-	printf("插入排序后：\n");
 	show(numbers, 10);
 
 	return 0;

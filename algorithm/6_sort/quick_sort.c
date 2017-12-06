@@ -68,9 +68,8 @@ int main(int argc, char **argv)
 	printf("排序前的随机数：\n");
 	show(numbers, 10);
 
+	printf("快速排序：\n");
 	quick_sort(numbers, 10);
-
-	printf("快速排序后：\n");
 	show(numbers, 10);
 
 	return 0;
