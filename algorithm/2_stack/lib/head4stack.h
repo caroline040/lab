@@ -1,7 +1,7 @@
 /*
  * CreazyProgramming/DataStructure/Stack/head4stack.h
  *
- * Copyright (C) 2009 Vincent Lin: <260656483@qq.com>
+ * Copyright (C) 2009 Vincent Lin: <2437231462@qq.com>
  *
 */
 
