@@ -5,6 +5,7 @@
 #include <termios.h> 
 #include <sys/types.h>
 #include <sys/select.h>
+#include <sys/ioctl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <netdb.h>
