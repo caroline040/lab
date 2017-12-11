@@ -18,15 +18,6 @@ void show(int num[], int len)
 	return;
 }
 
-void swap(int *px, int *py)
-{
-	int tmp;
-
-	tmp = *px;
-	*px = *py;
-	*py = tmp;
-}
-
 void shell_sort(int num[], int len)
 {
 	if(len <= 1)
