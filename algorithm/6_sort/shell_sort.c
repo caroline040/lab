@@ -18,21 +18,13 @@ void show(int num[], int len)
 	return;
 }
 
-void shell_insert(int num[], int len, int dlta)
+void swap(int *px, int *py)
 {
-	int lh, rh;
-	for(lh=0, rh=dlta; rh<len; lh++, rh++)
-	{
-		if(num[lh] <= num[rh])
-			continue;
+	int tmp;
 
-		int tmp;
-		tmp = num[lh];
-		num[lh] = num[rh];
-		num[rh] = tmp;
-	}
-
-	show(num, len);
+	tmp = *px;
+	*px = *py;
+	*py = tmp;
 }
 
 void shell_sort(int num[], int len)
@@ -40,10 +32,30 @@ void shell_sort(int num[], int len)
 	if(len <= 1)
 		return;
 
+	int i, j;
 	int dlta;
+
 	for(dlta=len/2; dlta>0; dlta/=2)
 	{
-		shell_insert(num, len, dlta);
+		for(i=0; i<dlta; ++i)
+		{
+			for(j=i+dlta; j<len; j+=dlta)
+			{
+				if(num[j] < num[j-dlta])
+				{
+					int tmp = num[j];
+					
+					int k = j-dlta;
+					while(k>=0 && num[k] > tmp)
+					{
+						num[k+dlta] = num[k];
+						k -= dlta;
+					}
+
+					num[k+dlta] = tmp;
+				}
+			}
+		}
 	}
 }
 
