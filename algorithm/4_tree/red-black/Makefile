@@ -1,6 +1,6 @@
-SRC += ../drawtree.c
-SRC += ../travel.c
-SRC += ../queue.c
+SRC += drawtree.c
+SRC += travel.c
+SRC += queue.c
 
 SRC += rb_common.c
 SRC += rb_delete.c
