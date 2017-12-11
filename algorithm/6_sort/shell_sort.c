@@ -18,6 +18,27 @@ void show(int num[], int len)
 	return;
 }
 
+void insert_sort(int num[], int len, int i, int dlta)
+{
+	int j;
+	for(j=i+dlta; j<len; j+=dlta)
+	{
+		if(num[j] < num[j-dlta])
+		{
+			int tmp = num[j];
+			
+			int k = j-dlta;
+			while(k>=0 && num[k] > tmp)
+			{
+				num[k+dlta] = num[k];
+				k -= dlta;
+			}
+
+			num[k+dlta] = tmp;
+		}
+	}
+}
+
 void shell_sort(int num[], int len)
 {
 	if(len <= 1)
@@ -30,22 +51,7 @@ void shell_sort(int num[], int len)
 	{
 		for(i=0; i<dlta; ++i)
 		{
-			for(j=i+dlta; j<len; j+=dlta)
-			{
-				if(num[j] < num[j-dlta])
-				{
-					int tmp = num[j];
-					
-					int k = j-dlta;
-					while(k>=0 && num[k] > tmp)
-					{
-						num[k+dlta] = num[k];
-						k -= dlta;
-					}
-
-					num[k+dlta] = tmp;
-				}
-			}
+			insert_sort(num, len, i, dlta);
 		}
 	}
 }
