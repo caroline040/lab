@@ -1,3 +1,20 @@
+///////////////////////////////////////////////////////////
+//
+//  Copyright(C), 2013-2017, GEC Tech. Co., Ltd.
+//
+//  文件: lab/uart/example1.c
+//
+//  日期: 2017-12
+//  描述: 两个串口之间发送数据
+//
+//  作者: Vincent Lin (林世霖)  
+//  微信公众号：秘籍酷
+//
+//  技术微店: http://weidian.com/?userid=260920190
+//  技术交流: 260492823（QQ群）
+//
+///////////////////////////////////////////////////////////
+
 #include <stdio.h>
 #include <errno.h>
 #include <stdbool.h>
@@ -56,9 +73,16 @@ void init_tty(int fd)
 
 void *routine(void *arg)
 {
+	struct termios tcinfo;
+	bzero(&tcinfo, sizeof(tcinfo));
+
+	tcinfo.c_iflag |= INLCR;
+
 	int fd_recv = *(int *)arg;
+	tcsetattr(fd_recv, TCSANOW, &tcinfo);
 
 	char *buf= calloc(1, BUFSIZE);
+
 	int n;
 	while(1)
 	{
@@ -67,17 +91,43 @@ void *routine(void *arg)
 		n = read(fd_recv, buf, BUFSIZE);
 		if(n > 0)
 		{
-			fprintf(stderr, "%s", buf);
+			fprintf(stderr, "recv: %s", buf);
 		}
 	}
 
 }
 
+char *menu(void)
+{
+	printf("1: /dev/ttySAC1\n");
+	printf("2: /dev/ttySAC2\n");
+	printf("3: /dev/ttySAC3\n");
+	printf("4: /dev/ttySAC4\n");
+
+	int n;
+	scanf("%d", &n);
+
+	switch(n)
+	{
+	case 1: return "/dev/ttySAC1";	
+	case 2: return "/dev/ttySAC2";	
+	case 3: return "/dev/ttySAC3";	
+	case 4: return "/dev/ttySAC4";	
+	}
+
+	return NULL;
+}
+
 int main(void)
 {
 	// GEC6818默认串口名称：/dev/ttySACx
-	char *tty_send = "/dev/ttySAC1";
-	char *tty_recv = "/dev/ttySAC2";
+	char *tty_send;
+	char *tty_recv;
+
+	printf("请选择发送端串口:\n");
+	tty_send = menu();
+	printf("请选择接收端串口:\n");
+	tty_recv = menu();
 
 	// 打开指定的串口设备节点，并初始化
 	int fd_send = open(tty_send, O_RDWR|O_NOCTTY);

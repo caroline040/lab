@@ -3,10 +3,18 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int main(int argc, char **argv)
+void usage(int argc, char **argv)
 {
 	if(argc != 3)
-		exit(1);
+	{
+		printf("Usage: %s <SRC> <DST>\n", argv[0]);
+		exit(0);
+	}
+}
+
+int main(int argc, char **argv)
+{
+	usage(argc, argv);
 
 	pid_t pid;
 	FILE *fp1 = fopen(argv[1], "r");
@@ -20,7 +28,8 @@ int main(int argc, char **argv)
 	pid = fork();
 
 	// parent copy the top-halves
-	if(pid > 0){
+	if(pid > 0)
+	{
 
 		for(i=0; i<len/2; i++)
 			fputc(fgetc(fp1), fp2);
@@ -30,12 +39,13 @@ int main(int argc, char **argv)
 	}
 
 	// child copy the bottom-halves
-	else if(pid == 0){
-
+	else if(pid == 0)
+	{
 		fseek(fp1, len/2, SEEK_SET);
 		fseek(fp2, len/2, SEEK_SET);
 		int c;
-		while(1){
+		while(1)
+		{
 			c = fgetc(fp1);
 			if(c == EOF && feof(fp1))
 				break;

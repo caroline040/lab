@@ -80,14 +80,14 @@ void beep(int buz, float microsec)
 	ioctl(buz, 1, 1);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
 	// 初始化串口
 	int fd = open(DEV_PATH1, O_RDWR | O_NOCTTY);
 	init_tty(fd);
 
 	// 打开蜂鸣器
-	int buz = open("/dev/beep", O_RDWR);
+	int buz = open(argv[1], O_RDWR);
 
 	// 准备应用命令
 	char *get_dev_info = calloc(1, 7);

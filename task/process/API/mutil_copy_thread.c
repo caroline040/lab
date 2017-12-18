@@ -14,13 +14,14 @@ void *tfn(void *arg)
 	fseek(fp2, len/2, SEEK_SET);
 	int c;
 
-	while(1){
+	// 子线程拷贝下半部分
+	while(1)
+	{
 		c = fgetc(fp1);
 		if(c == EOF && feof(fp1))
 			break;
 
 		fputc(c, fp2);
-		usleep(30);
 	}
 
 	pthread_exit(NULL);
@@ -42,9 +43,10 @@ int main(int argc, char **argv)
 
 	pthread_create(&tid, NULL, tfn, (void *)&len);
 
-	for(i=0; i<len/2; i++){
+	// 主线程拷贝上半部分
+	for(i=0; i<len/2; i++)
+	{
 		fputc(fgetc(fp1), fp2);
-		usleep(50);
 	}
 
 	pthread_join(tid, NULL);

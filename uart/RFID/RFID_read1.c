@@ -77,7 +77,6 @@ int main(void)
 {
 	// 初始化串口
 	int fd = open(DEV_PATH1, O_RDWR | O_NOCTTY);
-	//int fd = open("/dev/s3c2410_serial1", O_RDWR | O_NOCTTY | O_NONBLOCK);
 	init_tty(fd);
 
 	timeout.tv_sec = 1;
@@ -93,7 +92,6 @@ int main(void)
 	WBuf[4] = 0x52;	//请求模式:  ALL=0x52
 	WBuf[5] = CalBCC(WBuf, WBuf[0]-2); //校验和
 	WBuf[6] = 0x03; //结束标志
-
 
 	fprintf(stderr, "正在检测卡片");
 	int count = 0;
