@@ -19,37 +19,28 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-//#define BUZ_ON   _IOW('B', 1, unsigned long)
-//#define BUZ_OFF   _IOW('B', 0, unsigned long)
+#define ON  0
+#define OFF 1
 
-/*************************************************
-*主程序
-*************************************************/
 int main(void)
 {
-	int fd;
-	int ret;
-	fd = open("/dev/beep", O_RDWR);            //打开设备，成功返回0
-	if(fd<0){
+	// 打开蜂鸣器
+	int fd = open("/dev/beep", O_RDWR);
+	if(fd == -1)
+	{
 		perror("open:");
-		return -1;
+		exit(0);
 	}
 	
-	while(1) {
-		printf("**********************buzzer On*************************\n");
-		ret = ioctl(fd, 1, 1);                 //BUZZER on
-		if(ret < 0){
-			perror("ioctl:");
-			return -1;
-		}
-		sleep(2);
-		printf("**********************buzzer Off************************\n");
-		ret = ioctl(fd, 0, 1);                //BUZZER off
-		if(ret < 0){
-			perror("ioctl:");
-			return -1;
-		}		
-		sleep(2);	
+	while(1)
+	{
+		// 使能蜂鸣器
+		ioctl(fd, ON, 1);
+		sleep(1);
+
+		// 关闭蜂鸣器
+		ioctl(fd, OFF, 1);
+		sleep(1);
 	}	
 	
 	close(fd);
