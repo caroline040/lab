@@ -1,4 +1,4 @@
-#include "serial.h"
+#include "wifi.h"
 
 char *at1 = "AT\r\n"; // 测试语句，如果串口通信没问题WiFi将会返回OK
 char *at2 = "AT+RST\r\n"; //  重置WiFi模块

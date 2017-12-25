@@ -1,7 +1,7 @@
 CC = arm-none-linux-gnueabi-gcc
 
-serial:serial.c
+wifi:wifi.c
 	$(CC) $^ -o $@ -lpthread
 
 clean:
-	$(RM) serial
+	$(RM) wifi
