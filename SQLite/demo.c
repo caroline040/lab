@@ -9,11 +9,10 @@ static int callback(void *notused, int argc, char **argv, char **azColName)
 
 	for(i=0; i<argc; i++)
 	{
-		printf("%s = %s\n", azColName[i],
+		printf("%s = %s\t", azColName[i],
 				argv[i] ? argv[i] : "NULL");
 	}
-
-	printf("number %d callback\n", calltimes);
+	printf("\n");
 
 	return 0;
 }
@@ -23,13 +22,13 @@ int main(int argc, char **argv)
 	sqlite3 *db = NULL;
 
 	// create db
-	Sqlite3_open_v2("test.db", &db,
+	Sqlite3_open_v2("parking.db", &db,
 			SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
 			NULL);
 
 	// insert item
 	char *errmsg = NULL;
-	char *sql = "insert into employee(name, age) values('Michael', 30);";
+	char *sql = "insert into carinfo(licence, time_in) values('美A00911', 2001/09/11);";
 	Sqlite3_exec(db, sql, NULL, NULL, &errmsg);
 
 	// delete item
@@ -37,11 +36,13 @@ int main(int argc, char **argv)
 	// update item
 
 	// select items
-	sql = "select * from employee;";
+	sql = "select * from carinfo;";
 	Sqlite3_exec(db, sql, callback, NULL, &errmsg);
 
 
 	// close db
+	sql = "delete from carinfo where licence like '美%';";
+	Sqlite3_exec(db, sql, NULL, NULL, &errmsg);
 	sqlite3_close(db);
 
 	return 0;

@@ -69,6 +69,7 @@ void *routine(void *arg)
 
 		if(begin)
 		{
+			printf("fd: %d\n", fd);
 			select(fd+1, &rset, NULL, NULL, NULL);
 
 			if(FD_ISSET(fd, &rset))
@@ -84,7 +85,7 @@ void *routine(void *arg)
 		}
 		else
 		{
-			struct timeval tv = {0, 10*1000};
+			struct timeval tv = {0, 50*1000};
 			if(select(fd+1, &rset, NULL, NULL, &tv) > 0)
 			{
 				if(FD_ISSET(fd, &rset))
@@ -135,7 +136,6 @@ void menu(void)
 int main(void)
 {
 	// 输入要打开的串口文件，默认是/dev/ttySAC1
-	// GEC210是/dev/s3c2410_serial1
 	fprintf(stderr, "serial port:[/dev/ttySAC1] ? ");
 
 	char *device = calloc(1, 32);
