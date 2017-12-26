@@ -1,16 +1,12 @@
-CPPFLAGS += -I inc/
+CFLAGS += -L.
+CFLAGS += -I.
+CFLAGS += -lsqlite3
+CFLAGS += -lpthread
+CFLAGS += -ldl
+CFLAGS += -Wl,-rpath=.
 
-LDFLAGS += -L lib/
-LDFLAGS += -lsqlite3
-LDFLAGS += -lpthread
-LDFLAGS += -ldl
-LDFLAGS += -Wl,-rpath=./lib 
-
-demo:demo.c wrap.c lib/libsqlite3.so
-	$(CC) $^ -o $@ $(CPPFLAGS) $(LDFLAGS)
-
-lib/libsqlite3.so:
-	$(MAKE) -C lib
+demo:demo.c
+	$(CC) $^ -o $@ $(CFLAGS)
 
 clean:
-	$(RM) demo
+	$(RM) demo *.o *.so
